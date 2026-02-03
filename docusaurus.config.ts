@@ -74,11 +74,15 @@ const config: Config = {
       items: [
         {
           type: "docSidebar",
-          sidebarId: "tutorialSidebar",
+          sidebarId: "appSideBar",
           position: "left",
-          label: "Tutorial",
+          label: "Overview",
         },
-        { to: "/blog", label: "Blog", position: "left" },
+        {
+          to: "docs/apis",
+          label: "APIs",
+          position: "left",
+        },
         {
           href: "https://github.com/OsolDev/Suffa-Backend",
           label: "GitHub",
@@ -88,47 +92,7 @@ const config: Config = {
     },
     footer: {
       style: "dark",
-      links: [
-        {
-          title: "Docs",
-          items: [
-            {
-              label: "Tutorial",
-              to: "/docs/intro",
-            },
-          ],
-        },
-        {
-          title: "Community",
-          items: [
-            {
-              label: "Stack Overflow",
-              href: "https://stackoverflow.com/questions/tagged/docusaurus",
-            },
-            {
-              label: "Discord",
-              href: "https://discordapp.com/invite/docusaurus",
-            },
-            {
-              label: "X",
-              href: "https://x.com/docusaurus",
-            },
-          ],
-        },
-        {
-          title: "More",
-          items: [
-            {
-              label: "Blog",
-              to: "/blog",
-            },
-            {
-              label: "GitHub",
-              href: "https://github.com/OSOLDev/Suffa-Backend",
-            },
-          ],
-        },
-      ],
+
       copyright: `Copyright © ${new Date().getFullYear()} Suffa, Inc. Built with NestJS`,
     },
     prism: {

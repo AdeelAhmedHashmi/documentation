@@ -1,0 +1,9 @@
+{
+  "label": "Apis",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "A Complete Reference of Suffa Backend APIs",
+    "slug": "/apis"
+  }
+}

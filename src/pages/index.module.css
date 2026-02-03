@@ -21,3 +21,24 @@
   align-items: center;
   justify-content: center;
 }
+
+.heroBanner {
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.buttons {
+  margin-top: 1.5rem;
+}
+
+.features {
+  margin: 4rem 0;
+}
+
+.feature h3 {
+  margin-bottom: 0.5rem;
+}
+
+.feature p {
+  margin-bottom: 1rem;
+}
