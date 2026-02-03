@@ -93,7 +93,7 @@ const config: Config = {
     footer: {
       style: "dark",
 
-      copyright: `Copyright © ${new Date().getFullYear()} Suffa, Inc. Built with NestJS`,
+      copyright: `Copyright © ${new Date().getFullYear()} Suffa, Inc.`,
     },
     prism: {
       theme: prismThemes.github,
