@@ -15,7 +15,7 @@ const features = [
   {
     title: 'Guide and Tutorials',
     description: 'Guide for connecting, querying, and managing your database.',
-    link: '/docs/guide',
+    link: '/docs/category/guide',
   }
 ];
 
