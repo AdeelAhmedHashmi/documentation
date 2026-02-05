@@ -16,6 +16,11 @@ const features = [
     title: 'Guide and Tutorials',
     description: 'Guide for connecting, querying, and managing your database.',
     link: '/docs/category/guide',
+  },
+  {
+    title: 'Database Schemas',
+    description: 'Documentation of all database schemas.',
+    link: '/docs/Schemas/User/user-schema',
   }
 ];
 
