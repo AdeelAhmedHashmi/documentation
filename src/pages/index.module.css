@@ -17,6 +17,13 @@
   .feature{
     margin: 2rem 0;
   }
+  .feature *{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
 }
 
 .buttons {
@@ -45,14 +52,8 @@
 .heroContainer {
   display: flex;
   flex-direction: column;
-  background-image: url("/static/img/background.webp");
-  background-size: cover;
-  background-position: center;
 }
 
-.heroContainer > *:not(.button) {
-  background-color: #000000ab;
-}
 
 .buttons {
   margin-top: 1.5rem;
