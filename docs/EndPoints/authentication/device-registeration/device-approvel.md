@@ -5,7 +5,7 @@ title: Approve Device
 
 # Approve Device
 
-This endpoint approves a previously registered device using a `magicLink`.  
+This endpoint approves a previously registered device using a `magicLink`.
 Once approved, the device is granted the necessary permissions to interact with the system.
 
 ---
