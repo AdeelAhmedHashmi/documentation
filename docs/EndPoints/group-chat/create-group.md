@@ -27,7 +27,6 @@ Create a new group with the authenticated user as the first admin. This endpoint
 ```
 
 - `name` Required. Group name.
-- `circleId` Optional. Circle id (MongoId) if the group belongs to a circle.
 - `description` Optional. Max 500 characters.
 - `image` Optional. Image URL or reference string.
 - `visibility` Optional. Boolean, group visibility.
