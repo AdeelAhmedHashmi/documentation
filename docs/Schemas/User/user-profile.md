@@ -16,6 +16,7 @@ It includes identity info, profile data, media, social links, and account state.
 User {
   username: string
   phone: string
+  phoneHashed: string
   email?: string
   userState: "online" | "offline"
   avatar: Media | null
@@ -62,6 +63,18 @@ Example:
 
 ```json
 "phone": "+923001234567"
+```
+
+---
+
+#### `phoneHashed: string`
+
+Hashed phone number internal use only.
+
+Example:
+
+```json
+"phone": "$2b$10$I9z8JtjSWwn5rcDPMejl/./KeJ49GwtSKqPaett9HZe5wmrIrX6o6"
 ```
 
 ---

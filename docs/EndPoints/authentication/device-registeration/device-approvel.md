@@ -15,7 +15,7 @@ Once approved, the device is granted the necessary permissions to interact with 
 **POST**
 
 ```
-/devices/approve/{{magic-link}}
+/device/approve/{{magic-link}}
 ```
 
 ---
@@ -111,7 +111,7 @@ Authorization: Bearer {{bearer-token}}
 ## Example (cURL)
 
 ```bash
-curl -X POST {{baseUrl}}/devices/approve/{{magic-link}} \
+curl -X POST {{baseUrl}}/device/approve/{{magic-link}} \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer {{bearer-token}}" \
   -d '{

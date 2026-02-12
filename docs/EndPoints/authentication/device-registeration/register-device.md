@@ -14,7 +14,7 @@ This endpoint registers a user’s device in the system and returns a `magicLink
 **POST**
 
 ```
-/devices/register
+/device/register
 ```
 
 ---
@@ -111,7 +111,7 @@ Content-Type: application/json
 ## Example (cURL)
 
 ```bash
-curl -X POST {{baseUrl}}/devices/register \
+curl -X POST {{baseUrl}}/device/register \
   -H "Content-Type: application/json" \
   -d '{
     "phone": "+923012345678",
