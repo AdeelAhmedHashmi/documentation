@@ -69,10 +69,9 @@ This endpoint verifies the OTP sent to the user’s phone number and, if valid, 
   "success": true,
   "message": "request processed successfully",
   "data": {
-    "token": {
+    "tokens": {
       "accessToken": "jwt-access-token",
-      "refreshToken": "jwt-refresh-token",
-      "currentDevice": null
+      "refreshToken": "jwt-refresh-token"
     }
   },
   "timestamp": "2026-02-03T14:54:20.637Z"
@@ -102,6 +101,17 @@ This endpoint verifies the OTP sent to the user’s phone number and, if valid, 
 {
   "success": false,
   "message": "OTP verification failed"
+}
+```
+
+### Untrusted Device
+
+**Status:** `401 Unauthorized`
+
+```json
+{
+  "success": false,
+  "message": "New device detected. Please verify via email/SMS."
 }
 ```
 
