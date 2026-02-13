@@ -5,7 +5,7 @@ title: Update User Profile
 
 # Update User Profile
 
-These endpoints allow an authenticated user to update their profile information, including **basic details** and **social links**.
+These endpoints allow an authenticated user to update their profile information, including **basic details**
 
 Use this after the user has logged in and obtained a valid Bearer token.
 
