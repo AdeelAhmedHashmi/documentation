@@ -84,6 +84,11 @@ const config: Config = {
           position: "left",
         },
         {
+          to: "test",
+          label: "Api Client",
+          position: "left",
+        },
+        {
           href: "https://github.com/OsolDev/Suffa-Backend",
           label: "GitHub",
           position: "right",
