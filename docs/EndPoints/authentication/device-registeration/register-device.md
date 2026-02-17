@@ -14,7 +14,7 @@ This endpoint registers a user’s device in the system and returns a `magicLink
 **POST**
 
 ```
-/device/register
+/devices/register
 ```
 
 ---
@@ -38,7 +38,8 @@ Content-Type: application/json
   "deviceType": "android",
   "deviceName": "pixel 9",
   "platformVersion": "2.32.1",
-  "fcmToken": "equuwidsafsbncbbbersfewrwqejios"
+  "fcmToken": "equuwidsafsbncbbbersfewrwqejios",
+  "location": "Islamabad"
 }
 ```
 
@@ -54,6 +55,7 @@ Content-Type: application/json
 | deviceName      | string | Human-readable device name        |
 | platformVersion | string | App or OS version                 |
 | fcmToken        | string | Push notification token           |
+| location        | string | Location of user                  |
 
 ---
 
@@ -66,7 +68,9 @@ Content-Type: application/json
   "success": true,
   "message": "request processed successfully",
   "data": {
-    "magicLink": "278c2e94-ec62-487c-af85-8e64d12c1228"
+    "approvalLink": "278c2e94-ec62-487c-af85-8e64d12c1228",
+    "rejectionLink": "278c2e94-ec62-487c-af85-8e64d12c1228",
+    "method": "push_notification"
   },
   "timestamp": "2026-02-03T15:01:47.723Z"
 }
@@ -76,9 +80,10 @@ Content-Type: application/json
 
 ## Response Fields
 
-| Field     | Type   | Description                          |
-| --------- | ------ | ------------------------------------ |
-| magicLink | string | Unique token for device verification |
+| Field         | Type | Description           |
+| ------------- | ---- | --------------------- |
+| approvalLink  | GET  | Link to verify device |
+| rejectionLink | GET  | Link to reject device |
 
 ---
 
@@ -111,7 +116,7 @@ Content-Type: application/json
 ## Example (cURL)
 
 ```bash
-curl -X POST {{baseUrl}}/device/register \
+curl -X POST {{baseUrl}}/devices/register \
   -H "Content-Type: application/json" \
   -d '{
     "phone": "+923012345678",
@@ -119,6 +124,7 @@ curl -X POST {{baseUrl}}/device/register \
     "deviceType": "android",
     "deviceName": "pixel 9",
     "platformVersion": "2.32.1",
-    "fcmToken": "equuwidsafsbncbbbersfewrwqejios"
+    "fcmToken": "equuwidsafsbncbbbersfewrwqejios",
+    "location": "Islamabad"
   }'
 ```

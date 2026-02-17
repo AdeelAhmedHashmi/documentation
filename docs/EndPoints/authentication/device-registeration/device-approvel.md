@@ -12,10 +12,10 @@ Once approved, the device is granted the necessary permissions to interact with 
 
 ## Endpoint
 
-**POST**
+**GET**
 
 ```
-/device/approve/{{magic-link}}
+/devices/{{decision}}/{{token}}
 ```
 
 ---
@@ -27,32 +27,8 @@ Content-Type: application/json
 Authorization: Bearer {{bearer-token}}
 ```
 
-- `magic-link` → received via email / push notification in production
-- `bearer-token` → authenticated user token
-
----
-
-## Request Body
-
-```json
-{
-  "deviceId": "android.unique.189",
-  "deviceType": "android",
-  "deviceName": "pixel 9",
-  "platformVersion": "2.32.1"
-}
-```
-
----
-
-## Request Fields
-
-| Field           | Type   | Description                       |
-| --------------- | ------ | --------------------------------- |
-| deviceId        | string | Unique device identifier          |
-| deviceType      | string | Device type (android / ios / web) |
-| deviceName      | string | Human-readable device name        |
-| platformVersion | string | App or OS version                 |
+- `token` → received via email / push notification in production
+- `decision` → user decision about new device, only two possibilities -> (approve/reject)
 
 ---
 
@@ -73,25 +49,14 @@ Authorization: Bearer {{bearer-token}}
 
 ## Error Responses
 
-### Invalid Magic Link
+### Invalid Token
 
 **Status:** `400 Bad Request`
 
 ```json
 {
   "success": false,
-  "message": "Invalid or expired magic link"
-}
-```
-
-### Unauthorized
-
-**Status:** `401 Unauthorized`
-
-```json
-{
-  "success": false,
-  "message": "Bearer token missing or invalid"
+  "message": "Invalid or expired link / token"
 }
 ```
 
@@ -111,13 +76,9 @@ Authorization: Bearer {{bearer-token}}
 ## Example (cURL)
 
 ```bash
-curl -X POST {{baseUrl}}/device/approve/{{magic-link}} \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer {{bearer-token}}" \
-  -d '{
-    "deviceId": "android.unique.189",
-    "deviceType": "android",
-    "deviceName": "pixel 9",
-    "platformVersion": "2.32.1"
-  }'
+curl -X GET {{baseUrl}}/device/{{decision}}/{{token}}
 ```
+
+**Note:**
+
+_you cannot manually create this route its provided by via email, push notification or sms to trusted user, user just click this link and server validate automatically!_
