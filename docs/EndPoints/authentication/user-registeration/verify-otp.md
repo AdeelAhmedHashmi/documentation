@@ -89,7 +89,8 @@ This endpoint verifies the OTP sent to the user’s phone number and, if valid, 
 ```json
 {
   "success": false,
-  "message": "Invalid OTP"
+  "message": "Invalid OTP",
+  "timestamp": "2026-02-03T14:54:20.637Z"
 }
 ```
 
@@ -100,18 +101,20 @@ This endpoint verifies the OTP sent to the user’s phone number and, if valid, 
 ```json
 {
   "success": false,
-  "message": "OTP verification failed"
+  "message": "OTP verification failed",
+  "timestamp": "2026-02-03T14:54:20.637Z"
 }
 ```
 
 ### Untrusted Device
 
-**Status:** `401 Unauthorized`
+**Status:** `429 forbidden`
 
 ```json
 {
   "success": false,
-  "message": "New device detected. Please verify via email/SMS."
+  "message": "New device detected. Please verify first!",
+  "timestamp": "2026-02-03T14:54:20.637Z"
 }
 ```
 

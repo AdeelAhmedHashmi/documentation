@@ -77,29 +77,45 @@ It is sent to the user’s phone via SMS or another delivery channel.
 
 ## Common failure cases
 
-### Invalid phone number
+### Invalid phone number (409)
 
 If the phone number format is wrong:
 
 ```json
 {
   "success": false,
-  "message": "Invalid phone number"
+  "message": "Invalid phone number",
+  "timestamp": "2026-02-03T14:46:16.374Z"
 }
 ```
 
-### Too many requests
+### Too many requests (429)
 
 If the same user or device requests OTP too many times:
 
 ```json
 {
   "success": false,
-  "message": "Two many request"
+  "message": "Two many request",
+  "timestamp": "2026-02-03T14:46:16.374Z"
 }
 ```
 
 This usually means the user should wait a bit before trying again.
+
+### untrusted device (403)
+
+If unknown/new device try to login:
+
+```json
+{
+  "success": false,
+  "message": "untrusted device detected",
+  "timestamp": "2026-02-03T14:46:16.374Z"
+}
+```
+
+This is a Forbidden error!
 
 ---
 
