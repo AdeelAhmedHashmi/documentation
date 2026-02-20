@@ -61,6 +61,8 @@ Content-Type: application/json
 
 ## Success Response
 
+**developement**
+
 **Status:** `201 Created`
 
 ```json
@@ -68,9 +70,26 @@ Content-Type: application/json
   "success": true,
   "message": "request processed successfully",
   "data": {
-    "approvalLink": "278c2e94-ec62-487c-af85-8e64d12c1228",
-    "rejectionLink": "278c2e94-ec62-487c-af85-8e64d12c1228",
-    "method": "push_notification"
+    "approvelLink": "http://localhost:4000/suffa/api/devices/approve/erwiuiowejrinlkkjdoiiuuqewweq",
+    "rejectionLink": "http://localhost:4000/suffa/api/devices/reject/qweqeiuxjjdasiuwuqwjdiwieuqwe"
+  },
+  "timestamp": "2026-02-03T15:01:47.723Z"
+}
+```
+
+## Success Response
+
+**production**
+
+**Status:** `201 Created`
+
+```json
+{
+  "success": true,
+  "message": "request processed successfully",
+  "data": {
+    "message": "check your email to verify device",
+    "method": "[DeviceVerificationMethods]"
   },
   "timestamp": "2026-02-03T15:01:47.723Z"
 }
@@ -80,14 +99,26 @@ Content-Type: application/json
 
 ## Response Fields
 
-| Field         | Type | Description           |
-| ------------- | ---- | --------------------- |
-| approvalLink  | GET  | Link to verify device |
-| rejectionLink | GET  | Link to reject device |
+| Field                     | Type | Description                   |
+| ------------------------- | ---- | ----------------------------- |
+| approvalLink              | GET  | Link to verify device         |
+| rejectionLink             | GET  | Link to reject device         |
+| DeviceVerificationMethods | Enum | push_notification, email, sms |
 
 ---
 
 ## Error Responses
+
+### Invalid Request
+
+**Status:** `400 Bad Request`
+
+```json
+{
+  "success": false,
+  "message": "Invalid device data"
+}
+```
 
 ### Invalid Request
 
