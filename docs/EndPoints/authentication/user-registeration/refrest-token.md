@@ -5,7 +5,7 @@ title: Refresh Token
 
 # Refresh Token
 
-This endpoint allows the client to obtain a **new access token** using a valid **refresh token**.  
+This endpoint allows the client to obtain a **new tokens** using a valid **refresh token**.  
 Use this when the access token has expired but the refresh token is still valid.
 
 ---
@@ -49,13 +49,16 @@ Content-Type: application/json
   "success": true,
   "message": "request processed successfully",
   "data": {
-    "token": "new-access-token"
+    "tokens": {
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTgzMWI0YmM1OGVmZjc1YjQyMTBiOGUiLCJkZXZpY2VJZCI6ImFuZHJvaWQudW5pcXVlLmRldmljZS5pZCIsImlhdCI6MTc3MDIwNzg5MiwiZXhwIjoxNzcxMDcxODkyfQ.mZMpsmgx2giiR_TmEnaTbXGb7cKp1qyA3vF6QnSw96M",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJ1c2VySWQiOiI2OTgzMWI0YmM1OGVmZjc1YjQyMTBiOGUiLCJkZXYmM1OGVmZjc1YjQyMTBiOGUiLCJkZXZpMpsmgx2giiR_TmEnaTbXGb7cK2VySWQiOiI2OTgzMWI0YmMZXhw"
+    }
   },
   "timestamp": "2026-02-03T17:47:00.859Z"
 }
 ```
 
-- `data.token` → The new access token you should use in subsequent requests
+- `data.tokens` → The new access and refresh tokens you should use in subsequent requests
 
 ---
 

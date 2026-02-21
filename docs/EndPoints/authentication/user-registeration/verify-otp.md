@@ -60,7 +60,7 @@ This endpoint verifies the OTP sent to the user’s phone number and, if valid, 
 
 ---
 
-## Success Response
+## Success Response (in case of trusted/verified device)
 
 **Status:** `200 OK`
 
@@ -73,6 +73,21 @@ This endpoint verifies the OTP sent to the user’s phone number and, if valid, 
       "accessToken": "jwt-access-token",
       "refreshToken": "jwt-refresh-token"
     }
+  },
+  "timestamp": "2026-02-03T14:54:20.637Z"
+}
+```
+
+## Success Response (in case of untrusted/unverified device)
+
+**Status:** `200 OK`
+
+```json
+{
+  "success": true,
+  "message": "request processed successfully",
+  "data": {
+    "deviceVerificationNeeded": true
   },
   "timestamp": "2026-02-03T14:54:20.637Z"
 }
