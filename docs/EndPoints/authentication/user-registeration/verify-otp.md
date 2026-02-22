@@ -87,7 +87,7 @@ This endpoint verifies the OTP sent to the user’s phone number and, if valid, 
   "success": true,
   "message": "request processed successfully",
   "data": {
-    "deviceVerificationNeeded": true
+    "requiresDeviceVerification": true
   },
   "timestamp": "2026-02-03T14:54:20.637Z"
 }
