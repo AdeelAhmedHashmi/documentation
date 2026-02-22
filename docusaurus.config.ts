@@ -110,6 +110,7 @@ const config: Config = {
     [
       "@docusaurus/plugin-pwa",
       {
+        swCustom: require.resolve("./src/service-worker.js"),
         debug: false,
         offlineModeActivationStrategies: [
           "appInstalled",

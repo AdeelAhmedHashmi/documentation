@@ -1,31 +1,29 @@
 import { useState, useEffect } from "react";
+import BrowserOnly from "@docusaurus/BrowserOnly";
 
-export default function ApiTester() {
-  // Base URL
+function ApiTesterComponent() {
+  // Safe initial state for SSR
   const [baseUrl, setBaseUrl] = useState(
-    localStorage.getItem("baseUrl") || "https://jsonplaceholder.typicode.com",
+    "https://jsonplaceholder.typicode.com",
   );
-
-  // Request config
   const [method, setMethod] = useState("GET");
   const [endpoint, setEndpoint] = useState("/posts/1");
-
-  // Variables (like tokens)
-  const [variables, setVariables] = useState(
-    localStorage.getItem("variables") || "TOKEN=abc123",
-  );
-
-  // Headers
-  const [headers, setHeaders] = useState(
-    localStorage.getItem("headers") || "Content-Type: application/json",
-  );
-
-  // Body
+  const [variables, setVariables] = useState("TOKEN=abc123");
+  const [headers, setHeaders] = useState("Content-Type: application/json");
   const [body, setBody] = useState("{}");
-
-  // Response
-  const [response, setResponse] = useState<Record<string, string> | null>(null);
+  const [response, setResponse] = useState<Record<string, any> | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Load from localStorage after mount
+  useEffect(() => {
+    const storedBaseUrl = localStorage.getItem("baseUrl");
+    const storedVariables = localStorage.getItem("variables");
+    const storedHeaders = localStorage.getItem("headers");
+
+    if (storedBaseUrl) setBaseUrl(storedBaseUrl);
+    if (storedVariables) setVariables(storedVariables);
+    if (storedHeaders) setHeaders(storedHeaders);
+  }, []);
 
   // Persist to localStorage
   useEffect(() => {
@@ -34,18 +32,17 @@ export default function ApiTester() {
     localStorage.setItem("headers", headers);
   }, [baseUrl, variables, headers]);
 
-  // Parse variables like KEY=value
+  // Helper functions
   const parseVariables = () => {
     const map: Record<string, string> = {};
-    variables.split("\n").forEach((line: string) => {
+    variables.split("\n").forEach((line) => {
       const [key, value] = line.split("=");
       if (key && value) map[key.trim()] = value.trim();
     });
     return map;
   };
 
-  // Replace {{VAR}} in strings
-  const applyVariables = (str: any, vars: any) => {
+  const applyVariables = (str: string, vars: Record<string, string>) => {
     let result = str;
     Object.keys(vars).forEach((key) => {
       result = result.replaceAll(`{{${key}}}`, vars[key]);
@@ -53,14 +50,11 @@ export default function ApiTester() {
     return result;
   };
 
-  // Parse headers
   const parseHeaders = (vars: Record<string, string>) => {
     const obj: Record<string, string> = {};
     headers.split("\n").forEach((line) => {
       const [key, value] = line.split(":");
-      if (key && value) {
-        obj[key.trim()] = applyVariables(value.trim(), vars);
-      }
+      if (key && value) obj[key.trim()] = applyVariables(value.trim(), vars);
     });
     return obj;
   };
@@ -89,11 +83,11 @@ export default function ApiTester() {
     }
   };
 
+  // Render
   return (
     <div style={{ padding: 20, fontFamily: "monospace" }}>
-      <h2>Test Your Api</h2>
+      <h2>Test Your API</h2>
 
-      {/* Base URL */}
       <div>
         <label>Base URL</label>
         <input
@@ -103,7 +97,6 @@ export default function ApiTester() {
         />
       </div>
 
-      {/* Method + Endpoint */}
       <div style={{ display: "flex", marginTop: 10 }}>
         <select value={method} onChange={(e) => setMethod(e.target.value)}>
           <option>GET</option>
@@ -122,7 +115,6 @@ export default function ApiTester() {
         </button>
       </div>
 
-      {/* Variables */}
       <div style={{ marginTop: 10 }}>
         <label>Variables (KEY=value)</label>
         <textarea
@@ -133,7 +125,6 @@ export default function ApiTester() {
         />
       </div>
 
-      {/* Headers */}
       <div style={{ marginTop: 10 }}>
         <label>Headers (Key: Value)</label>
         <textarea
@@ -144,7 +135,6 @@ export default function ApiTester() {
         />
       </div>
 
-      {/* Body */}
       <div style={{ marginTop: 10 }}>
         <label>Body (JSON)</label>
         <textarea
@@ -155,7 +145,6 @@ export default function ApiTester() {
         />
       </div>
 
-      {/* Response */}
       <div style={{ marginTop: 20 }}>
         <h3>Response</h3>
         {loading ? (
@@ -168,4 +157,9 @@ export default function ApiTester() {
       </div>
     </div>
   );
+}
+
+// Wrap in BrowserOnly so Docusaurus doesn't SSR it
+export default function ApiTester() {
+  return <BrowserOnly>{() => <ApiTesterComponent />}</BrowserOnly>;
 }
