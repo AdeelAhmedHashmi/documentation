@@ -121,18 +121,6 @@ This endpoint verifies the OTP sent to the user’s phone number and, if valid, 
 }
 ```
 
-### Untrusted Device
-
-**Status:** `429 forbidden`
-
-```json
-{
-  "success": false,
-  "message": "New device detected. Please verify first!",
-  "timestamp": "2026-02-03T14:54:20.637Z"
-}
-```
-
 ---
 
 ## Example (cURL)
