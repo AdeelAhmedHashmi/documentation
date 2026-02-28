@@ -28,12 +28,16 @@ Send a private (1:1) message to a specific user. This endpoint validates the sen
 {
   "content": "Hello there",
   "type": "text",
+  "mediaGroupId": "uuid",
+  "sequenceIndex": 0,
   "media": [{ "publicId": "temp/user_123/abc" }]
 }
 ```
 
 - `content` Required. Text content of the message.
 - `type` Required. Message type. Allowed values: `text`, `image`, `video`, `file`.
+- `mediaGroupId`: Optional. Same group id for message media grouping.
+- `sequenceIndex`: Required(In case of mediaGroupId). User to trach Sequence of Media in a message group.
 - `media` Optional array of media references.
   - Each item requires `publicId`.
 
@@ -48,6 +52,8 @@ curl -X POST "{{baseUrl}}/message/send/{{userId}}" \
   -d '{
     "content": "Hello there",
     "type": "text",
+    "mediaGroupId": "uuid",
+    "sequenceIndex": 0,
     "media": [
       { "publicId": "temp/user_123/abc" }
     ]
@@ -67,6 +73,8 @@ curl -X POST "{{baseUrl}}/message/send/{{userId}}" \
     "senderId": "<senderId>",
     "type": "text",
     "content": "Hello there",
+    "mediaGroupId": "uuid",
+    "sequenceIndex": 0,
     "media": [
       {
         "url": "https://...",

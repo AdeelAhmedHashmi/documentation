@@ -29,6 +29,8 @@ Message {
   senderId: string
   type: MessageType
   content: string
+  mediaGroupId?: string
+  sequenceIndex?: number
   media?: Media[]
   deliveredTo: string[]
   seenBy: string[]
@@ -112,6 +114,28 @@ Used for:
 - fetching history
 - pagination
 - real-time subscriptions
+
+---
+
+#### `mediaGroupId: string`
+
+Unique pre message media grouping.
+
+Used for:
+
+- used to show media album like group on UI
+- unique pre group
+
+---
+
+#### `sequenceIndex: string`
+
+Sequence Tracking Index for each Message in Message Grouping.
+
+Used for:
+
+- used to show items sequencially
+- unique pre item
 
 ---
 
