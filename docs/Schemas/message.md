@@ -31,7 +31,7 @@ Message {
   content: string
   mediaGroupId?: string
   sequenceIndex?: number
-  media?: Media[]
+  attachment?: Media
   deliveredTo: string[]
   seenBy: string[]
   isDeleted: boolean
@@ -352,7 +352,6 @@ This allows:
   "senderId": "user_45",
   "type": "text",
   "content": "Hello, how are you?",
-  "media": [],
   "deliveredTo": ["user_67"],
   "seenBy": ["user_67"],
   "isDeleted": false,
@@ -372,8 +371,7 @@ This allows:
   "senderId": "user_45",
   "type": "image",
   "content": "Look at this",
-  "media": [
-    {
+  "media": {
       "url": "https://cdn.app.com/image.webp",
       "type": "image",
       "publicId": "media_999",
@@ -381,8 +379,7 @@ This allows:
       "height": "720",
       "bytes": "245000",
       "assetId": "cloud_abc"
-    }
-  ],
+  },
   "deliveredTo": ["user_67"],
   "seenBy": [],
   "isDeleted": false,

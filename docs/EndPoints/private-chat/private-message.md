@@ -30,7 +30,7 @@ Send a private (1:1) message to a specific user. This endpoint validates the sen
   "type": "text",
   "mediaGroupId": "uuid",
   "sequenceIndex": 0,
-  "media": [{ "publicId": "temp/user_123/abc" }]
+  "attachment": [{ "publicId": "temp/user_123/abc" }]
 }
 ```
 
@@ -38,7 +38,7 @@ Send a private (1:1) message to a specific user. This endpoint validates the sen
 - `type` Required. Message type. Allowed values: `text`, `image`, `video`, `file`.
 - `mediaGroupId`: Optional. Same group id for message media grouping.
 - `sequenceIndex`: Required(In case of mediaGroupId). User to trach Sequence of Media in a message group.
-- `media` Optional array of media references.
+- `attachment` Optional media reference public id.
   - Each item requires `publicId`.
 
 ---
@@ -54,9 +54,7 @@ curl -X POST "{{baseUrl}}/message/send/{{userId}}" \
     "type": "text",
     "mediaGroupId": "uuid",
     "sequenceIndex": 0,
-    "media": [
-      { "publicId": "temp/user_123/abc" }
-    ]
+    "attachment": { "publicId": "temp/user_123/abc" }
   }'
 ```
 
@@ -75,17 +73,15 @@ curl -X POST "{{baseUrl}}/message/send/{{userId}}" \
     "content": "Hello there",
     "mediaGroupId": "uuid",
     "sequenceIndex": 0,
-    "media": [
-      {
-        "url": "https://...",
-        "publicId": "temp/user_123/abc",
-        "assetId": "<assetId>",
-        "type": "image",
-        "height": 800,
-        "width": 600,
-        "bytes": 102400
-      }
-    ],
+    "attachment": {
+      "url": "https://...",
+      "publicId": "temp/user_123/abc",
+      "assetId": "<assetId>",
+      "type": "image",
+      "height": 800,
+      "width": 600,
+      "bytes": 102400
+    },
     "deliveredTo": [],
     "seenBy": [],
     "isDeleted": false,
@@ -103,12 +99,12 @@ curl -X POST "{{baseUrl}}/message/send/{{userId}}" \
 
 - Authentication is required. Requests without a valid token are rejected.
 - `userId` must be a valid MongoId.
-- `content` and `type` are required even if `media` is included.
+- `content` and `type` are required even if `attachment` is included.
 - If the receiver has blocked the sender, the request fails.
 - If the sender has blocked the receiver, the request fails.
 - The system ensures a private chat exists between the two users before sending.
 - Any unknown fields in the body are rejected by validation.
-- Media items are promoted from temporary storage; invalid media references will fail the request.
+- Media items are promoted from temporary storage; invalid attachment references will fail the request.
 
 ---
 
