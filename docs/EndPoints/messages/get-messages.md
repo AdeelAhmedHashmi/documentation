@@ -69,7 +69,18 @@ curl -X GET "{{baseUrl}}/message/{{conversationId}}?limit=10&days=3" \
         "senderId": "<senderId>",
         "type": "text",
         "content": "Hello",
-        "media": [],
+        "attachment": {
+          "id": "67d0f84f0a4f4f49f2a4c333",
+          "storageKey": "message_media/abc123",
+          "url": "https://res.cloudinary.com/demo/image/upload/v1/message_media/abc123.jpg",
+          "type": "image",
+          "ownerType": "message",
+          "provider": "CLOUDINARY",
+          "blurHash": "LKO2?U%2Tw=w]~RBVZRi};RPxuwH",
+          "width": 1920,
+          "height": 1080,
+          "size": 348120
+        },
         "isDeleted": false,
         "createdAt": "2026-02-06T12:37:51.523Z",
         "updatedAt": "2026-02-06T12:37:51.523Z"

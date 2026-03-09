@@ -38,8 +38,9 @@ Send a private (1:1) message to a specific user. This endpoint validates the sen
 - `type` Required. Message type. Allowed values: `text`, `image`, `video`, `file`.
 - `mediaGroupId`: Optional. Same group id for message media grouping.
 - `sequenceIndex`: Required(In case of mediaGroupId). User to trach Sequence of Media in a message group.
-- `attachment` Optional media reference public id.
-  - Each item requires `publicId`.
+- `attachment` requires `publicId` and `fileType`.
+
+> ### To see possible values of fileType in attachment see `Media Schema`
 
 ---
 
@@ -54,7 +55,7 @@ curl -X POST "{{baseUrl}}/message/send/{{userId}}" \
     "type": "text",
     "mediaGroupId": "uuid",
     "sequenceIndex": 0,
-    "attachment": { "publicId": "temp/user_123/abc" }
+    "attachment": { "publicId": "temp/user_123/abc", fileType: "image" }
   }'
 ```
 
@@ -74,13 +75,14 @@ curl -X POST "{{baseUrl}}/message/send/{{userId}}" \
     "mediaGroupId": "uuid",
     "sequenceIndex": 0,
     "attachment": {
-      "url": "https://...",
-      "publicId": "temp/user_123/abc",
-      "assetId": "<assetId>",
+      "storageKey": "message_media/abc123",
+      "url": "https://res.cloudinary.com/demo/image/upload/v1/message_media/abc123.jpg",
       "type": "image",
-      "height": 800,
-      "width": 600,
-      "bytes": 102400
+      "ownerType": "message",
+      "provider": "CLOUDINARY",
+      "width": 1920,
+      "height": 1080,
+      "size": 348120
     },
     "deliveredTo": [],
     "seenBy": [],
