@@ -3,24 +3,17 @@ id: message-schema
 title: Message Schema
 ---
 
-# Message & Media Schema
+# Message Schema
 
-This document describes the **Message object**, which represents **one single message** inside a conversation (chat, group, or channel).
+This document defines a **Message object**, which represents a single message in a chat conversation.
 
 Think of it as:
 
-> **Conversation = timeline of Message objects**
-
-Each message can be:
-
-- text
-- media
-- or both
-- with delivery & seen states
+> **One message = sender + conversation + content/media + delivery/read state**
 
 ---
 
-## Message Object (High Level)
+## Message Object (High-Level)
 
 ```ts
 Message {
@@ -28,13 +21,15 @@ Message {
   conversationId: string
   senderId: string
   type: MessageType
+  mediaGroupId: string | null
+  sequenceIndex: number | null
   content: string
-  mediaGroupId?: string
-  sequenceIndex?: number
-  attachment?: Media
+  attachment: string | null
   deliveredTo: string[]
   seenBy: string[]
   isDeleted: boolean
+  deletedAt: string | null
+  deletedBy: string | null
   createdAt: string
   updatedAt: string
 }
@@ -42,433 +37,295 @@ Message {
 
 ---
 
-## Mental Model
+## Core Concept (Mental Model)
 
-A **Message is mutable content + mutable state**
+A **Message = Identity + Payload + Status**
 
-```
-Content:
-  - text
-  - media
+It answers:
 
-State:
-  - deliveredTo
-  - seenBy
-  - isDeleted
-```
-
-This matches **WhatsApp / Telegram / iMessage architecture**.
+- _Who sent this and where?_ (`senderId`, `conversationId`)
+- _What is the message type and payload?_ (`type`, `content`, `attachment`)
+- _Is this part of grouped media?_ (`mediaGroupId`, `sequenceIndex`)
+- _What is the delivery/read state?_ (`deliveredTo`, `seenBy`)
+- _Is it soft deleted?_ (`isDeleted`, `deletedAt`, `deletedBy`)
 
 ---
 
-## MessageType
+## Enums
 
-Defines what kind of message this is.
+### MessageType
 
-Typical values:
+Represents what kind of message this is.
 
 ```ts
 MessageType =
   | "text"
   | "image"
   | "video"
-  | "file"
   | "audio"
-  | "system"
+  | "gif"
+  | "emoji"
+  | "file"
 ```
 
-Used by frontend to:
+Used for:
 
-- decide UI layout
-- choose renderer
-- show icons
-- apply styling
+- rendering rules in chat UI
+- validation of allowed payload types
+- feature behavior (text vs media/file flow)
 
 ---
 
 ## Field-by-Field Breakdown
 
-### Identity
+### 1. Identity & Ownership
 
 #### `id: string`
 
-Unique message ID.
+Unique identifier of the message document.
 
 Used for:
 
-- key in lists
-- replies
-- deletion
-- scrolling anchors
+- message actions (edit/delete/retry)
+- cursor-based pagination anchors
+- delivery/read tracking updates
 
 ---
 
 #### `conversationId: string`
 
-Which chat this message belongs to.
-
-One conversation → many messages.
+Reference to the chat/conversation this message belongs to (`Chat` ObjectId).
 
 Used for:
 
-- fetching history
-- pagination
-- real-time subscriptions
+- listing messages per conversation
+- querying conversation history
 
----
+Notes:
 
-#### `mediaGroupId: string`
-
-Unique pre message media grouping.
-
-Used for:
-
-- used to show media album like group on UI
-- unique pre group
-
----
-
-#### `sequenceIndex: string`
-
-Sequence Tracking Index for each Message in Message Grouping.
-
-Used for:
-
-- used to show items sequencially
-- unique pre item
+- indexed in schema for faster reads
 
 ---
 
 #### `senderId: string`
 
-Who sent the message.
+Reference to the sender user (`User` ObjectId).
 
 Used for:
 
-- alignment (left/right)
-- avatar
-- username
-- permissions
+- ownership checks
+- sender-based UI grouping
+
+Notes:
+
+- indexed in schema
 
 ---
 
-## Content Layer
+### 2. Payload
 
-### `type: MessageType`
+#### `type: MessageType`
 
-What kind of message.
+Type of the message payload.
 
-Example:
+Notes:
 
-```json
-"type": "text"
-```
-
----
-
-### `content: string`
-
-Main textual content.
-
-Examples:
-
-```json
-"content": "Hello bro"
-"content": ""
-"content": "Check this out"
-```
-
-Even for media messages, this can be:
-
-- caption
-- description
-- empty
+- defaults to `"text"`
+- validated against enum values
 
 ---
 
-## Media Object
+#### `content: string`
 
-Only exists if message contains media.
-
-```ts
-Media {
-  url: string
-  type: FileType
-  publicId: string
-  width: string
-  height: string
-  bytes: string
-  assetId?: string
-}
-```
-
----
-
-### Media Fields Explained
-
-#### `url`
-
-Public CDN URL.
-
-Used directly in:
-
-- `<img>`
-- `<video>`
-- `<audio>`
-- download links
-
----
-
-#### `type: FileType`
-
-Media type.
-
-```ts
-FileType =
-  | "image"
-  | "video"
-  | "audio"
-  | "file"
-```
-
-Frontend uses this to:
-
-- choose renderer
-- show previews
-- apply compression rules
-
----
-
-#### `publicId`
-
-Internal media identifier (Cloudinary / S3).
+Main textual content of the message.
 
 Used for:
 
-- delete
-- replace
-- reprocess
-- analytics
+- text rendering
+- search use cases
+
+Notes:
+
+- required in schema
+- marked with `searchable: true` metadata
 
 ---
 
-#### `width`, `height`
+#### `attachment: string | null`
 
-Dimensions.
+Optional reference to a media document (`Media` ObjectId).
 
 Used for:
 
-- aspect ratio
-- layout skeletons
-- lazy loading
-- avoiding layout shift
+- media/file message payloads
+- fetching file metadata and URLs
 
 ---
 
-#### `bytes`
+### 3. Media Grouping
 
-File size.
+#### `mediaGroupId: string | null`
+
+Optional grouping key for related media messages (album-like posts).
 
 Used for:
 
-- showing size (2.4 MB)
-- download warnings
-- bandwidth checks
+- bundling multiple media items together in UI
 
 ---
 
-#### `assetId` (optional)
+#### `sequenceIndex: number | null`
 
-Provider-specific internal ID.
+Optional order of an item inside a media group.
 
 Used for:
 
-- debugging
-- media pipelines
-- re-indexing
+- preserving media order in grouped messages
 
 ---
 
-## Delivery State
+### 4. Delivery and Read State
 
-These two fields are **pure real-time chat magic**.
+#### `deliveredTo: string[]`
 
-### `deliveredTo: string[]`
+User IDs for recipients that have delivery confirmation.
 
-List of user IDs who received this message.
+Notes:
+
+- defaults to empty array
+- `select: false` so it is hidden from default queries
+
+---
+
+#### `seenBy: string[]`
+
+User IDs for recipients that have seen/read the message.
+
+Notes:
+
+- defaults to empty array
+- `select: false` so it is hidden from default queries
+
+---
+
+### 5. Deletion State
+
+#### `isDeleted: boolean`
+
+Soft-delete flag for the message.
 
 Used for:
 
-- single tick ✔
-- group delivery status
-- offline sync
+- hiding removed content without hard deletion
+
+Notes:
+
+- defaults to `false`
+- indexed in schema
 
 ---
 
-### `seenBy: string[]`
+#### `deletedAt: string | null`
 
-List of user IDs who opened the message.
-
-Used for:
-
-- double tick ✔✔
-- seen avatars
-- read receipts
+Timestamp for when the message was soft deleted.
 
 ---
 
-## Deletion
+#### `deletedBy: string | null`
 
-### `isDeleted: boolean`
+Deletion metadata field as currently modeled in schema.
 
-```json
-"isDeleted": true
-```
+Notes:
 
-Meaning:
-
-- message is soft-deleted
-- content hidden
-- UI shows:
-
-> “This message was deleted”
-
-This allows:
-
-- undo
-- moderation
-- audit logs
+- in code it is typed as `Date`
 
 ---
 
-## Full Example Message
+### 6. Timestamps
 
-### Text Message
+#### `createdAt: string`
+
+Creation timestamp in ISO format (auto-managed by Mongoose timestamps).
+
+---
+
+#### `updatedAt: string`
+
+Last update timestamp in ISO format (auto-managed by Mongoose timestamps).
+
+---
+
+## Rules and Constraints
+
+These are practical rules implied by the schema:
+
+1. **Conversation and sender are mandatory**
+   - `conversationId` and `senderId` are required for every message.
+
+2. **Type is controlled**
+   - `type` must be one of `MessageType` values.
+   - If omitted, it becomes `"text"`.
+
+3. **Soft delete model**
+   - Messages are not necessarily removed from DB.
+   - `isDeleted` + deletion metadata indicate removal state.
+
+4. **Hidden tracking fields**
+   - `deliveredTo` and `seenBy` are not returned by default because `select: false` is set.
+
+5. **Grouped media support**
+   - `mediaGroupId` and `sequenceIndex` allow message albums/batches.
+
+---
+
+## Indexing and Performance Notes
+
+Defined indexes:
+
+- `conversationId` index for conversation message queries
+- `senderId` index for sender-based queries
+- `isDeleted` index for filtering active vs deleted messages
+- `createdAt` descending index (`{ createdAt: -1 }`) for latest-first retrieval
+
+---
+
+## Common Operations (Workflow Mapping)
+
+Common actions and touched fields:
+
+- **Send text message** -> `conversationId`, `senderId`, `type="text"`, `content`
+- **Send media message** -> `type`, `attachment`, optional `content`
+- **Send grouped media** -> `mediaGroupId`, `sequenceIndex`, `attachment`
+- **Mark delivered** -> update `deliveredTo`
+- **Mark seen** -> update `seenBy`
+- **Soft delete message** -> set `isDeleted=true`, set `deletedAt`/`deletedBy`
+
+---
+
+## Full Example Message Object
 
 ```json
 {
-  "id": "msg_1",
-  "conversationId": "chat_123",
-  "senderId": "user_45",
-  "type": "text",
-  "content": "Hello, how are you?",
-  "deliveredTo": ["user_67"],
-  "seenBy": ["user_67"],
-  "isDeleted": false,
-  "createdAt": "2026-02-05T10:10:00Z",
-  "updatedAt": "2026-02-05T10:10:00Z"
-}
-```
-
----
-
-### Image Message
-
-```json
-{
-  "id": "msg_2",
-  "conversationId": "chat_123",
-  "senderId": "user_45",
+  "id": "msg_123",
+  "conversationId": "67d0f84f0a4f4f49f2a4c111",
+  "senderId": "67d0f84f0a4f4f49f2a4c222",
   "type": "image",
-  "content": "Look at this",
-  "media": {
-      "url": "https://cdn.app.com/image.webp",
-      "type": "image",
-      "publicId": "media_999",
-      "width": "1080",
-      "height": "720",
-      "bytes": "245000",
-      "assetId": "cloud_abc"
-  },
-  "deliveredTo": ["user_67"],
+  "mediaGroupId": "album_88",
+  "sequenceIndex": 1,
+  "content": "Sunset photo",
+  "attachment": "67d0f84f0a4f4f49f2a4c333",
+  "deliveredTo": ["67d0f84f0a4f4f49f2a4c444"],
   "seenBy": [],
   "isDeleted": false,
-  "createdAt": "2026-02-05T10:12:00Z",
-  "updatedAt": "2026-02-05T10:12:00Z"
+  "deletedAt": null,
+  "deletedBy": null,
+  "createdAt": "2026-03-09T10:30:00.000Z",
+  "updatedAt": "2026-03-09T10:30:00.000Z"
 }
 ```
 
 ---
 
-## UI Features This Schema Supports
+## Notes
 
-This schema enables:
-
-### 1. Message State Tracking
-
-```
-deliveredTo.length > 0 → ✔
-seenBy.length > 0 → ✔✔
-```
-
----
-
-### 2. Media Gallery
-
-Filter:
-
-```ts
-messages.filter((m) => m.media.length > 0);
-```
-
----
-
-### 3. Message Identity
-
-CRUD operation with `message.id`
-
----
-
-### 4. Infinite Scroll
-
-Sorted by:
-
-```
-conversationId + createdAt
-```
-
----
-
-### 5. Delete for Everyone
-
-```
-isDeleted = true
-```
-
----
-
-### 6. Seen Avatars (Groups)
-
-```
-seenBy.map(user => avatar)
-```
-
----
-
-## Mental Model
-
-Think of messages as:
-
-```
-Conversation
- └── Message[]
-      ├── Identity (id, sender)
-      ├── Content (text, media)
-      ├── State (delivered, seen)
-      └── Flags (deleted)
-```
-
----
-
-## Product-Level Insight
-
-This schema is **production-grade chat architecture**.
-
-It gives you:
-
-- real-time delivery tracking
-- seen receipts
-- soft delete
-- media handling
-- CDN friendly rendering
-- scalable message timelines
+- `replyTo` is intentionally excluded from this document because its experimental
