@@ -1,268 +1,317 @@
 ---
+id: media-schema
 title: Media Schema
-description: Comprehensive documentation for the Media schema used in file storage and management
-sidebar_position: 2
-tags: [schema, media, storage, cloudinary, file-management]
 ---
 
-# Media Schema Documentation
+# Media Schema
 
-## Overview
+This document defines a **Media object**, which represents a stored/uploaded media asset and its metadata.
 
-The Media schema is the central data structure for managing all file uploads, storage, and metadata across the Suffa platform. It integrates with multiple storage providers (Cloudinary, S3, etc.), tracks file metadata (dimensions, duration, size), and supports media optimization features like thumbnails and blur hashes.
+Think of it as:
 
-## Schema Structure
+> **One media = storage identity + ownership + provider + file metadata**
 
-### Primary Concepts
+---
 
-The Media schema is designed with the following principles:
+## Media Object (High-Level)
 
-- **Provider-agnostic**: Support for multiple storage providers with flexible metadata
-- **Metadata-rich**: Comprehensive tracking of file properties and dimensions
-- **Ownership model**: Clear tracking of media ownership and type
-- **Optimization ready**: Built-in support for thumbnails and progressive loading
-- **Performance focused**: Indexed queries for efficient media retrieval
-
-## Core Fields
-
-### Storage & Identification
-
-| Field          | Purpose                             | Details                                         |
-| -------------- | ----------------------------------- | ----------------------------------------------- |
-| **storageKey** | Unique identifier in storage system | Provider-specific key; indexed for fast lookups |
-| **url**        | Accessible URL for the media        | Direct link to file; indexed for retrieval      |
-| **provider**   | Storage service provider            | Supports Cloudinary (default), S3, and others   |
-
-### File Characteristics
-
-| Field        | Purpose                        | Details                                                                     |
-| ------------ | ------------------------------ | --------------------------------------------------------------------------- |
-| **type**     | Classification of file content | Supports: IMAGE, VIDEO, AUDIO, DOCUMENT, PDF, etc. (see FileType constants) |
-| **size**     | File size in bytes             | Required field; useful for bandwidth and storage calculations               |
-| **width**    | Image/video width in pixels    | Optional; only relevant for visual media                                    |
-| **height**   | Image/video height in pixels   | Optional; only relevant for visual media                                    |
-| **duration** | Media duration in seconds      | Optional; for audio and video files                                         |
-
-### Ownership & Access Control
-
-| Field         | Purpose                 | Details                                             |
-| ------------- | ----------------------- | --------------------------------------------------- |
-| **ownerType** | Category of media owner | Indicates context: USER, PROFILE, CHAT, GROUP, etc. |
-
-### Optimization & Display
-
-| Field            | Purpose                         | Details                                                |
-| ---------------- | ------------------------------- | ------------------------------------------------------ |
-| **thumbnail**    | URL to thumbnail version        | Optimized preview for faster loading                   |
-| **blurHash**     | Perceptual hash for placeholder | Enables blur effect while loading (blurhash algorithm) |
-| **providerMeta** | Provider-specific metadata      | Flexible object for storing provider-unique data       |
-
-### Automatic Timestamps
-
-| Field         | Purpose                     | Details                 |
-| ------------- | --------------------------- | ----------------------- |
-| **createdAt** | File upload timestamp       | Auto-managed by MongoDB |
-| **updatedAt** | Last modification timestamp | Auto-managed by MongoDB |
-
-## Field Details by Data Type
-
-### Storage Provider Types
-
-The schema supports multiple storage providers with this field:
-
-| Provider          | Use Case                               | Metadata Type                        |
-| ----------------- | -------------------------------------- | ------------------------------------ |
-| **Cloudinary**    | Primary media hosting, transformations | Rich metadata with optimization URLs |
-| **AWS S3**        | High-volume storage, backups           | Standard S3 metadata                 |
-| **Local Storage** | Development, fallback                  | File system metadata                 |
-
-### File Type Categories
-
-The Media schema tracks various file types for appropriate handling:
-
-- **IMAGE**: Photos, illustrations, diagrams (JPEG, PNG, WebP, GIF)
-- **VIDEO**: Motion pictures and recordings (MP4, WebM, MOV)
-- **AUDIO**: Sound files and recordings (MP3, WAV, M4A, OGG)
-- **DOCUMENT**: Text documents (DOC, DOCX, TXT)
-- **PDF**: Portable document format files
-- **ARCHIVE**: Compressed files (ZIP, RAR, 7Z)
-- **OTHER**: Miscellaneous file types
-
-### Owner Type Categories
-
-Media ownership is tracked by context for proper access control:
-
-- **USER**: Profile pictures and personal media
-- **PROFILE**: Cover images and profile-related media
-- **CHAT**: Messages and chat media
-- **GROUP**: Group profile and shared media
-- **STORY**: Story content (temporary media)
-- **POST**: Timeline/feed posts
-
-## Indexing Strategy
-
-The schema employs strategic indexing for performance optimization:
-
-| Field          | Index Type        | Purpose                                    |
-| -------------- | ----------------- | ------------------------------------------ |
-| **storageKey** | Standard + Unique | Fast provider lookups, prevents duplicates |
-| **url**        | Standard          | Quick resolution from URL references       |
-| **type**       | Standard          | Efficient filtering by media type          |
-| **ownerType**  | Standard          | Query media by ownership context           |
-| **createdAt**  | Descending        | Chronological ordering without sorting     |
-
-## Relationship Map
-
-```
-Media
-├── storageKey → External Storage (Cloudinary/S3)
-├── provider → Storage Configuration
-├── providerMeta → Flexible Metadata Object
-├── type → FileType Enumeration
-├── ownerType → Owner Category
-└── timestamps (createdAt, updatedAt)
+```ts
+Media {
+  id: string
+  storageKey: string
+  url: string
+  type: FileType
+  ownerType: MediaOwners
+  provider: StorageProviders
+  providerMeta?: Record<string, any>
+  thumbnail?: string
+  blurHash?: string
+  width?: number
+  height?: number
+  duration?: number
+  size: number
+  createdAt: string
+  updatedAt: string
+}
 ```
 
-## Key Behaviors & Patterns
+---
 
-### Media Lifecycle
+## Core Concept (Mental Model)
 
-1. **Upload**: File stored with provider, storageKey and URL generated
-2. **Processing**: Thumbnails and blur hashes generated for optimization
-3. **Metadata**: File dimensions, duration, and size calculated and stored
-4. **Association**: Media linked to messages, profiles, or other documents
-5. **Retrieval**: Quick access via optimized indexing and URL
-6. **Deletion**: Provider and database cleanup (handled separately)
+A **Media = Identity + Storage Provider + Technical Metadata**
 
-### Progressive Image Loading
+It answers:
 
-The schema supports three-tier image loading strategy:
+- _Where is this file stored?_ (`storageKey`, `provider`, `providerMeta`)
+- _How can clients access it?_ (`url`, optional `thumbnail`)
+- _What kind of file is it?_ (`type`, `size`, dimensions/duration)
+- _Who owns/uses this media?_ (`ownerType`)
 
-1. **Blur phase**: Display blurHash placeholder while loading
-2. **Thumbnail phase**: Show low-quality thumbnail for preview
-3. **Full quality**: Display complete, optimized image from URL
+---
 
-### Storage Provider Abstraction
+## Enums
 
-The flexible `providerMeta` field stores provider-specific data:
+### FileType
 
-**Cloudinary Example:**
+Represents the logical media/file classification.
 
-- Transformation URLs for resizing
-- Optimization parameters
-- Secure signing tokens
-- Delivery optimization settings
+```ts
+FileType =
+  | "image"
+  | "vector"
+  | "file"
+  | "video"
+  | "audio"
+  | "word"
+  | "excel"
+  | "ppt"
+  | "pdf"
+  | "txt"
+  | "markdown"
+  | "csv"
+  | "epub"
+  | "mobi"
+  | "zip"
+  | "rar"
+  | "7z"
+  | "tar"
+  | "gz"
+```
 
-**S3 Example:**
+---
 
-- Bucket location
-- Storage class
-- Access permissions
-- Versioning information
+### MediaOwners
 
-## Usage Scenarios
+Represents which domain entity owns this media.
 
-### User Profile Media
+```ts
+MediaOwners =
+  | "message"
+  | "profile"
+  | "post"
+```
 
-- Avatar images: ownerType = USER
-- Cover photos: ownerType = PROFILE
-- Optimized with thumbnails for gallery views
+---
 
-### Messaging Media
+### StorageProviders
 
-- Attachments in messages: ownerType = CHAT
-- Individual or grouped media
-- Full-quality with thumbnails for preview
+Represents which storage backend is used.
 
-### Group Media
+```ts
+StorageProviders =
+  | "CLOUDINARY"
+  | "S3"
+```
 
-- Group profile pictures: ownerType = GROUP
-- Shared album content: ownerType = GROUP
-- Quick retrieval for member displays
+---
 
-### Document Sharing
+## Field-by-Field Breakdown
 
-- PDFs and documents: type = PDF/DOCUMENT
-- Metadata tracking for size and availability
-- Provider-independent access
+### 1. Identity & Storage
 
-### Story/Temporary Content
+#### `id: string`
 
-- Short-lived media: ownerType = STORY
-- Optional expiration through deletedAt pattern
-- Fast thumbnail access for story preview strips
+Unique identifier of the media document.
 
-## Performance Considerations
+---
 
-- **Indexed queries**: Fast retrieval by type, owner, or provider
-- **URL-based access**: Direct file serving without processing
-- **Lazy loading**: Thumbnail strategy reduces initial bandwidth
-- **Metadata caching**: Size and dimension data available without provider lookup
-- **Provider abstraction**: Flexible providerMeta prevents schema changes per provider
+#### `storageKey: string`
 
-## Content Delivery Optimization
+Provider-side storage key/public identifier for this file.
 
-### Responsive Media Sizes
+Used for:
 
-The schema stores dimensions enabling responsive sizing:
+- retrieval and lifecycle operations in storage provider
+- delete/replace workflows
 
-- Original: Full resolution (url)
-- Large: 800px breakpoint (thumbnail via provider)
-- Medium: 400px breakpoint (thumbnail via provider)
-- Small: 200px breakpoint (blurHash placeholder)
+Notes:
 
-### Progressive Enhancement
+- required in schema
+- indexed
 
-1. **Network slow/offline**: Display blurHash placeholder
-2. **Thumbnail ready**: Show low-quality preview (thumbnail)
-3. **Full download**: Display high-quality image from URL
-4. **User interaction**: Load full-resolution on demand
+---
 
-## Validation Rules
+#### `url: string`
 
-- **storageKey**: Required, non-empty string
-- **type**: Must be valid FileType
-- **ownerType**: Required, must be valid owner category
-- **size**: Required, must be positive number
-- **width/height/duration**: Optional but must be positive if provided
-- **url**: Any valid string format
+Resolved URL/path used to access the media file.
 
-## Related Schemas
+Used for:
 
-- [Message Schema](./message-schema.md) - Media attachment references
-- [User Schema](./user-schema.md) - Profile media associations
-- [Chat Schema](./chat-schema.md) - Chat media grouping
+- client rendering and playback
+- sharing/downloading
 
-## Integration Points
+Notes:
 
-### Message Integration
+- indexed
 
-Messages reference Media via ObjectId for:
+---
 
-- Direct attachments
-- Reply-quoted media
-- Media grouping via mediaGroupId
+### 2. Classification & Ownership
 
-### Profile Integration
+#### `type: FileType`
 
-User profiles reference Media for:
+Logical file/media category.
 
-- Avatar images
-- Cover photos
-- Social proof images
+Notes:
 
-### Storage Provider Integration
+- validated against `FileType` enum
+- indexed
 
-- Cloudinary: Transformations and CDN delivery
-- AWS S3: Scalable object storage
-- Local: Development and fallback storage
+---
 
-## Best Practices
+#### `ownerType: MediaOwners`
 
-1. **Always include metadata**: Populate width, height, duration for visual media
-2. **Generate thumbnails**: Create thumbnail URLs for improved UX
-3. **Use blur hashes**: Enable progressive image loading
-4. **Validate file types**: Ensure file extensions match declared type
-5. **Track size**: Maintain accurate byte counts for quota management
-6. **Set owner type**: Always specify context for access control
-7. **Store provider metadata**: Include provider-specific optimization data
+Declares which entity type this media belongs to.
+
+Notes:
+
+- required in schema
+- validated against `MediaOwners` enum
+- indexed
+
+---
+
+### 3. Provider Details
+
+#### `provider: StorageProviders`
+
+Storage backend used for this media.
+
+Notes:
+
+- defaults to `process.env.STORAGE_PROVIDER` if set, otherwise `"CLOUDINARY"`
+- validated against `StorageProviders`
+
+---
+
+#### `providerMeta?: Record<string, any>`
+
+Provider-specific metadata blob (public ID, version, transformation data, etc.).
+
+---
+
+### 4. Render Metadata
+
+#### `thumbnail?: string`
+
+Optional URL/path for preview thumbnail.
+
+---
+
+#### `blurHash?: string`
+
+Optional compact placeholder hash for progressive image loading.
+
+---
+
+#### `width?: number`
+
+Optional media width in pixels.
+
+---
+
+#### `height?: number`
+
+Optional media height in pixels.
+
+---
+
+#### `duration?: number`
+
+Optional duration (typically in seconds) for audio/video assets.
+
+---
+
+#### `size: number`
+
+File size in bytes.
+
+Notes:
+
+- required in schema
+
+---
+
+### 5. Timestamps
+
+#### `createdAt: string`
+
+Creation timestamp in ISO format (auto-managed by Mongoose timestamps).
+
+---
+
+#### `updatedAt: string`
+
+Last update timestamp in ISO format (auto-managed by Mongoose timestamps).
+
+---
+
+## Rules and Constraints
+
+These are practical rules implied by the schema:
+
+1. **Storage identity is mandatory**
+   - `storageKey` and `size` must exist for every media record.
+
+2. **Ownership is explicit**
+   - `ownerType` is required and restricted to known owner categories.
+
+3. **File type is controlled**
+   - `type` must be one of the allowed `FileType` enum values.
+
+4. **Provider fallback exists**
+   - `provider` defaults to env-defined storage provider, else `CLOUDINARY`.
+
+5. **Metadata is flexible**
+   - optional technical fields (`thumbnail`, `blurHash`, `width`, `height`, `duration`, `providerMeta`) support multiple media types.
+
+---
+
+## Indexing and Performance Notes
+
+Defined indexes:
+
+- `storageKey` index for provider-side lookups
+- `url` index for URL-based lookups
+- `type` index for type filtering
+- `ownerType` index for ownership-based queries
+
+---
+
+## Common Operations (Workflow Mapping)
+
+Common actions and touched fields:
+
+- **Create media record after upload** -> `storageKey`, `url`, `type`, `ownerType`, `provider`, `size`
+- **Attach media to message/profile/post** -> `ownerType`, relation kept by consuming domain model
+- **Generate previews/placeholders** -> update `thumbnail`, `blurHash`
+- **Store dimensions/duration** -> update `width`, `height`, `duration`
+- **Provider-specific reconciliation** -> update/read `providerMeta`
+
+---
+
+## Full Example Media Object
+
+```json
+{
+  "id": "67d0f84f0a4f4f49f2a4c333",
+  "storageKey": "message_media/abc123",
+  "url": "https://res.cloudinary.com/demo/image/upload/v1/message_media/abc123.jpg",
+  "type": "image",
+  "ownerType": "message",
+  "provider": "CLOUDINARY",
+  "providerMeta": {
+    "public_id": "message_media/abc123",
+    "version": 1741516200
+  },
+  "thumbnail": "https://res.cloudinary.com/demo/image/upload/c_thumb,w_300/message_media/abc123.jpg",
+  "blurHash": "LKO2?U%2Tw=w]~RBVZRi};RPxuwH",
+  "width": 1920,
+  "height": 1080,
+  "duration": null,
+  "size": 348120,
+  "createdAt": "2026-03-09T10:30:00.000Z",
+  "updatedAt": "2026-03-09T10:30:00.000Z"
+}
+```
