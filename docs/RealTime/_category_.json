@@ -1,0 +1,9 @@
+{
+    "label": "SocketEvents",
+    "position": 3,
+    "link": {
+        "type": "generated-index",
+        "description": "A Realtime Websocket Events Overview",
+        "slug": "/web-socket-events"
+    }
+}
