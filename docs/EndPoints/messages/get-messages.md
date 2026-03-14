@@ -1,11 +1,11 @@
 ---
-id: get-messages
-title: Get Messages
+id: fetch-messages
+title: Fetch Messages
 ---
 
-# Get Messages
+# Fetch Messages
 
-Fetch messages from a conversation using cursor-based pagination. This endpoint returns the most recent messages first and provides a cursor to continue loading older messages.
+Retrieve messages for a conversation using timeline cursor pagination.
 
 ---
 
@@ -15,41 +15,24 @@ Fetch messages from a conversation using cursor-based pagination. This endpoint 
 
 **Headers**:
 
-- `Content-Type: application/json`
 - `Authorization: Bearer {{token}}`
 
 **Path Parameters**:
 
-- `conversationId` � Conversation id (MongoId).
+- `conversationId` Conversation id (string)
 
 **Query Parameters**:
 
-- `limit` � Required. Max number of messages to return. Default behavior (if omitted) is 40, but the DTO expects it.
-- `days` � Optional. Only return messages from the last N days. Default: `3`.
-- `before` � Optional. Cursor timestamp (ISO string). Fetch messages created **before** this timestamp.
-
-Example:
-
-`GET /message/<conversationId>?limit=20&days=7&before=2026-02-01T12:00:00.000Z`
-
----
-
-## Pagination Style (Cursor)
-
-This endpoint uses **cursor-based pagination** with a `before` timestamp.
-
-- The response includes `nextCursor` which is the `createdAt` of the **oldest message** in the current page.
-- To load older messages, pass `before={{nextCursor}}` in the next request.
-- Messages are returned in **descending** order by `createdAt` (latest first).
-- The `days` filter applies **before** the cursor filter and limits the overall time window.
+- `limit` Required string. Parsed with `Number(limit)` in the controller (falls back to `40` if falsy or non-numeric).
+- `days` Optional string. Parsed with `Number(days)` (falls back to `3` if falsy or non-numeric).
+- `before` Optional string (date). If provided, converted with `new Date(before)` and used as an upper bound for `createdAt`.
 
 ---
 
 ## Example cURL Request
 
 ```bash
-curl -X GET "{{baseUrl}}/message/{{conversationId}}?limit=10&days=3" \
-  -H "Content-Type: application/json" \
+curl -X GET "{{baseUrl}}/message/67d0f84f0a4f4f49f2a4c111?limit=20&days=3&before=2026-03-09T10:31:10.000Z" \
   -H "Authorization: Bearer {{token}}"
 ```
 
@@ -64,11 +47,19 @@ curl -X GET "{{baseUrl}}/message/{{conversationId}}?limit=10&days=3" \
   "data": {
     "messages": [
       {
-        "_id": "<messageId>",
-        "conversationId": "<conversationId>",
-        "senderId": "<senderId>",
+        "_id": "67d0f84f0a4f4f49f2a4c222",
+        "conversationId": "67d0f84f0a4f4f49f2a4c111",
+        "senderId": {
+          "_id": "67d0f84f0a4f4f49f2a4c333",
+          "username": "alice",
+          "avatar": {
+            "_id": "67d0f84f0a4f4f49f2a4c444",
+            "url": "https://cdn.example.com/avatar-alice.jpg",
+            "storageKey": "avatars/67d0f84f0a4f4f49f2a4c333.jpg"
+          }
+        },
         "type": "text",
-        "content": "Hello",
+        "content": "Hello there",
         "attachment": {
           "id": "67d0f84f0a4f4f49f2a4c333",
           "storageKey": "message_media/abc123",
@@ -80,15 +71,34 @@ curl -X GET "{{baseUrl}}/message/{{conversationId}}?limit=10&days=3" \
           "width": 1920,
           "height": 1080,
           "size": 348120
+        ,
+        "replyTo": {
+          "content": "hi this is a test message!",
+          "senderName": "adeelahmed",
+          "type": "text"
         },
+        "mediaGroupId": "id.1234",
+        "sequenceIndex": 2,
         "isDeleted": false,
-        "createdAt": "2026-02-06T12:37:51.523Z",
-        "updatedAt": "2026-02-06T12:37:51.523Z"
+        "forwardCount": 0,
+        "createdAt": "2026-03-09T10:30:00.000Z",
+        "updatedAt": "2026-03-09T10:30:00.000Z",
+        "reactions": {
+          "counts": {
+            "😒": 17,
+            "😡": 12,
+            "👍": 2,
+          },
+          "userReactions": [
+            "👍"
+          ],
+          "total": 2
+        }
       }
     ],
-    "nextCursor": "2026-02-06T12:37:51.523Z"
+    "nextCursor": "2026-03-09T10:30:00.000Z"
   },
-  "timestamp": "2026-02-07T00:00:00.000Z"
+  "timestamp": "2026-03-09T10:31:10.000Z"
 }
 ```
 
@@ -96,12 +106,15 @@ curl -X GET "{{baseUrl}}/message/{{conversationId}}?limit=10&days=3" \
 
 ## Notes
 
-- Authentication is required. Requests without a valid token are rejected.
-- The requester must be a member of the chat or group conversation.
-- `limit` should be a positive number; the system defaults to 40 when not provided.
-- `days` defaults to 3 if omitted.
-- `before` must be a valid date string (ISO recommended).
-- Only message metadata is returned; delivery/read info is not included here.
+- Authentication is enforced via the global `AuthGuard` (`@UserParam()` indicates the route always receives the authenticated user).
+- Authorization is checked against chat membership first; if not authorized, the service checks group membership. If neither matches, a `404` is thrown (`conversation not found!`).
+- Messages are sorted by `createdAt` descending (newest first).
+- `nextCursor` is the `createdAt` timestamp of the last message in the current page, or `null` if no messages are returned.
+- `senderId` is populated with `username` and `avatar` (and nested `avatar.url` and `avatar.storageKey`).
+- `attachment` is populated when present.
+- Each message includes a `reactions` summary: `counts`, `userReactions`, and `total`.
+- Unknown query fields are rejected by the global validation pipe (`ValidationPipe` with `forbidNonWhitelisted`).
+- The global response interceptor wraps payloads as `success`, `message`, `data`, and `timestamp`.
 
 ---
 
@@ -109,10 +122,13 @@ curl -X GET "{{baseUrl}}/message/{{conversationId}}?limit=10&days=3" \
 
 - `400 Bad Request`
   - Invalid `conversationId`
-  - Invalid query values
+  - Missing or empty `limit` (required by `TimelineCursorPaginationDto`)
 - `401 Unauthorized`
-  - Missing or invalid token
-  - Suspended or inactive account
-  - Untrusted device
+  - Missing or malformed `Authorization` header
+  - Invalid/expired token
+  - Suspended, inactive, or untrusted device (see `AuthGuard` checks)
 - `404 Not Found`
-  - Conversation not found or user not authorized
+  - Conversation not found or user not authorized to view it
+- `500 Internal Server Error`
+  - Database query failure in `MessageRepository`
+  - Any other unexpected server-side failure
