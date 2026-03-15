@@ -85,20 +85,27 @@ function ApiTesterComponent() {
 
   // Render
   return (
-    <div style={{ padding: 20, fontFamily: "monospace" }}>
-      <h2>Test Your API</h2>
+    <div className="api-tester">
+      <div className="api-tester__header">
+        <h2>Test Your API</h2>
+        <p>Quickly send requests and inspect responses.</p>
+      </div>
 
-      <div>
-        <label>Base URL</label>
+      <div className="api-tester__field">
+        <label className="api-tester__label">Base URL</label>
         <input
-          style={{ width: "100%" }}
+          className="api-tester__input"
           value={baseUrl}
           onChange={(e) => setBaseUrl(e.target.value)}
         />
       </div>
 
-      <div style={{ display: "flex", marginTop: 10 }}>
-        <select value={method} onChange={(e) => setMethod(e.target.value)}>
+      <div className="api-tester__row">
+        <select
+          className="api-tester__select"
+          value={method}
+          onChange={(e) => setMethod(e.target.value)}
+        >
           <option>GET</option>
           <option>POST</option>
           <option>PUT</option>
@@ -106,51 +113,51 @@ function ApiTesterComponent() {
           <option>DELETE</option>
         </select>
         <input
-          style={{ flex: 1, marginLeft: 10 }}
+          className="api-tester__input api-tester__input--grow"
           value={endpoint}
           onChange={(e) => setEndpoint(e.target.value)}
         />
-        <button onClick={sendRequest} style={{ marginLeft: 10 }}>
+        <button className="api-tester__button" onClick={sendRequest}>
           Send
         </button>
       </div>
 
-      <div style={{ marginTop: 10 }}>
-        <label>Variables (KEY=value)</label>
+      <div className="api-tester__field">
+        <label className="api-tester__label">Variables (KEY=value)</label>
         <textarea
           rows={4}
-          style={{ width: "100%" }}
+          className="api-tester__textarea"
           value={variables}
           onChange={(e) => setVariables(e.target.value)}
         />
       </div>
 
-      <div style={{ marginTop: 10 }}>
-        <label>Headers (Key: Value)</label>
+      <div className="api-tester__field">
+        <label className="api-tester__label">Headers (Key: Value)</label>
         <textarea
           rows={4}
-          style={{ width: "100%" }}
+          className="api-tester__textarea"
           value={headers}
           onChange={(e) => setHeaders(e.target.value)}
         />
       </div>
 
-      <div style={{ marginTop: 10 }}>
-        <label>Body (JSON)</label>
+      <div className="api-tester__field">
+        <label className="api-tester__label">Body (JSON)</label>
         <textarea
           rows={5}
-          style={{ width: "100%" }}
+          className="api-tester__textarea"
           value={body}
           onChange={(e) => setBody(e.target.value)}
         />
       </div>
 
-      <div style={{ marginTop: 20 }}>
+      <div className="api-tester__response">
         <h3>Response</h3>
         {loading ? (
-          <p>Loading...</p>
+          <p className="api-tester__muted">Loading...</p>
         ) : (
-          <pre style={{ background: "#111", color: "#0f0", padding: 10 }}>
+          <pre className="api-tester__pre">
             {response ? JSON.stringify(response, null, 2) : "No response yet"}
           </pre>
         )}

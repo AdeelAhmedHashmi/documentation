@@ -81,6 +81,11 @@ curl -X GET "{{baseUrl}}/message/67d0f84f0a4f4f49f2a4c111?limit=20&days=3&before
         "sequenceIndex": 2,
         "isDeleted": false,
         "forwardCount": 0,
+        "forwardMeta": {
+          "originalMessageId": "69b6cf48c9905ebcfe5156b6",
+          "originalConversationId": "69b5748861c8212a3189cb16",
+          "originalSenderId": "69a026700812dd821414f341",
+        },
         "createdAt": "2026-03-09T10:30:00.000Z",
         "updatedAt": "2026-03-09T10:30:00.000Z",
         "reactions": {
