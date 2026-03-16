@@ -40,6 +40,8 @@ curl -X GET "{{baseUrl}}/message/67d0f84f0a4f4f49f2a4c111?limit=20&days=3&before
 
 ## Response 200 OK
 
+> **note:** this response contain in general message. where all fields are shown!
+
 ```json
 {
   "success": true,
@@ -79,7 +81,15 @@ curl -X GET "{{baseUrl}}/message/67d0f84f0a4f4f49f2a4c111?limit=20&days=3&before
         },
         "mediaGroupId": "id.1234",
         "sequenceIndex": 2,
-        "isDeleted": false,
+        "isDeleted": true,
+        "deletedAt": "2026-03-09T10:30:00.000Z",
+        "editedAt": "2026-03-09T10:30:00.000Z",
+        "evet": "join_request",
+        "metaData": {
+          "targetId": "8861c8212a39a02670c99"
+        },
+        "actorId": "8861c8212a39a02670c99",
+        "isPinned": false,
         "forwardCount": 0,
         "forwardMeta": {
           "originalMessageId": "69b6cf48c9905ebcfe5156b6",
@@ -119,6 +129,7 @@ curl -X GET "{{baseUrl}}/message/67d0f84f0a4f4f49f2a4c111?limit=20&days=3&before
 - `attachment` is populated when present.
 - Each message includes a `reactions` summary: `counts`, `userReactions`, and `total`.
 - Unknown query fields are rejected by the global validation pipe (`ValidationPipe` with `forbidNonWhitelisted`).
+- `event` and `actorId` only contains in case of message type `system`
 - The global response interceptor wraps payloads as `success`, `message`, `data`, and `timestamp`.
 
 ---
