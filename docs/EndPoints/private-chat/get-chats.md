@@ -56,7 +56,9 @@ curl -X GET "{{baseUrl}}/chat?page=1&limit=20" \
         "lastMessage": {
           "_id": "67d0f84f0a4f4f49f2a4c444",
           "content": "See you soon",
+          "type": "text",
           "senderId": {
+            "_id": "69ba7f2d50cd343ab59f1c06",
             "username": "alice"
           }
         },
