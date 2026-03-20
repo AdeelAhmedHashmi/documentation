@@ -62,8 +62,7 @@ curl -X GET "{{baseUrl}}/chat?page=1&limit=20" \
             "username": "alice"
           }
         },
-        "unreadCount": 0,
-        "createdAt": "2026-03-09T10:30:00.000Z",
+        "unreadCount": 10,
         "updatedAt": "2026-03-09T10:31:00.000Z"
       }
     ],

@@ -58,7 +58,9 @@ curl -X GET "{{baseUrl}}/group?page=1&limit=20" \
         "lastMessage": {
           "_id": "67d0f84f0a4f4f49f2a4c555",
           "content": "Welcome everyone",
+          "type": "text",
           "senderId": {
+            "_id": "d0f84f0a4f4f84f0a4f4f49f",
             "username": "alice"
           },
           "updatedAt": "2026-03-17T10:30:00.000Z"
