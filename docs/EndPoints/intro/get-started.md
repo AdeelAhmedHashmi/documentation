@@ -14,16 +14,28 @@ Welcome to the **Suffa API documentation**! This page will guide you through the
 Here are the base URLs for accessing the API in different environments:
 
 **Production Environment**  
- `https://<hostname>:port/suffa/api/`
+ `https://<hostname>:port/v1/`
 
 **Development Environment**  
- `https://0.0.0.0:4000/suffa/api/`
+ `https://0.0.0.0:4000/v1/`
 
 > ⚠️ Replace `<hostname>` with your actual production domain.
 
 ---
 
-## 2. Dynamic Values in API Requests
+## 2. Default Routes
+
+---
+
+**To Check Server Availability**
+`/`
+
+**To Check Client Information**
+`/ping`
+
+---
+
+## 3. Dynamic Values in API Requests
 
 Some API endpoints require dynamic values such as tokens, IDs, or query parameters.  
 We use `{{ }}` to indicate placeholders:
@@ -38,7 +50,7 @@ Content-Type: application/json
 
 ---
 
-## 3. Request & Response Format
+## 4. Request & Response Format
 
 All API requests and responses follow the **JSON format**.
 
@@ -96,7 +108,7 @@ Content-Type: application/json
 
 ---
 
-## 4. Authorization
+## 5. Authorization
 
 Most endpoints require **Bearer token** authentication.
 Include it in your request headers like this:
@@ -109,7 +121,7 @@ Authorization: Bearer {{token}}
 
 ---
 
-## 5. Best Practices
+## 6. Best Practices
 
 1. Always use the correct **environment base URL**.
 2. Replace **all `{{ }}` placeholders** with actual values.
