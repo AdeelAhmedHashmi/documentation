@@ -1,17 +1,17 @@
 ---
-id: private-message
-title: Send Message To User
+id: message-on-conversation
+title: Message On Conversation
 ---
 
-# Private Message
+# Conversation Messaging
 
-Send a private (1:1) message to a specific user. This endpoint validates the sender, ensures both users are allowed to talk, optionally attaches media, and returns the newly created message.
+Send a message to a conversation. This endpoint validates the sender, ensures user is a member of conversation. optionally attaches media, and returns the newly created message.
 
 ---
 
 ## Endpoint
 
-`POST /message/send/:userId`
+`PATCH /message/send/:conversationId`
 
 **Headers**:
 
@@ -59,7 +59,7 @@ Send a private (1:1) message to a specific user. This endpoint validates the sen
 ## Example cURL Request
 
 ```bash
-curl -X POST "{{baseUrl}}/message/send/{{userId}}" \
+curl -X PATCH "{{baseUrl}}/message/send/{{conversationId}}" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer {{token}}" \
   -d '{
@@ -80,7 +80,7 @@ curl -X POST "{{baseUrl}}/message/send/{{userId}}" \
   "success": true,
   "message": "request processed successfully",
   "data": {
-    "conversationId": "<chatId>",
+    "conversationId": "<conversationId>",
     "senderId": "<senderId>",
     "type": "text",
     "content": "Hello there",
@@ -116,7 +116,7 @@ curl -X POST "{{baseUrl}}/message/send/{{userId}}" \
 ## Notes
 
 - Authentication is required. Requests without a valid token are rejected.
-- `userId` must be a valid MongoId.
+- `conversationId` must be a valid MongoId.
 - `content` and `type` are required even if `attachment` is included.
 - If the receiver has blocked the sender, the request fails.
 - If the sender has blocked the receiver, the request fails.
