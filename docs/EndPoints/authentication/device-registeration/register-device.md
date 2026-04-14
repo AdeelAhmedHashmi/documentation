@@ -70,8 +70,8 @@ Content-Type: application/json
   "success": true,
   "message": "request processed successfully",
   "data": {
-    "approvelLink": "http://localhost:4000/suffa/api/devices/approve/erwiuiowejrinlkkjdoiiuuqewweq",
-    "rejectionLink": "http://localhost:4000/suffa/api/devices/reject/qweqeiuxjjdasiuwuqwjdiwieuqwe"
+    "approvelLink": "{{baseUrl}}/devices/approve/erwiuiowejrinlkkjdoiiuuqewweq",
+    "rejectionLink": "{{baseUrl}}/devices/reject/qweqeiuxjjdasiuwuqwjdiwieuqwe"
   },
   "timestamp": "2026-02-03T15:01:47.723Z"
 }

@@ -72,6 +72,9 @@ This endpoint verifies the OTP sent to the user’s phone number and, if valid, 
     "tokens": {
       "accessToken": "jwt-access-token",
       "refreshToken": "jwt-refresh-token"
+    },
+    "user": {
+      "isNew": "true"
     }
   },
   "timestamp": "2026-02-03T14:54:20.637Z"

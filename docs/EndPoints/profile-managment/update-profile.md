@@ -65,6 +65,8 @@ Authorization: Bearer {{token}}
 | Field       | Type      | Required | Description                                    |
 | ----------- | --------- | -------- | ---------------------------------------------- |
 | username    | string    | No       | Display name of the user                       |
+| firstName   | string    | No       | Display firstname of the user                  |
+| lastName    | string    | No       | Display lastname of the user                   |
 | location    | object    | No       | User's location                                |
 | gender      | string    | No       | User gender (`male`, `female`, `not specify`)  |
 | status      | string    | No       | Status message                                 |
