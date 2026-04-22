@@ -48,10 +48,7 @@ All fields are optional. **Use `1` to include a field and `0` to exclude it**, b
 > Example request to include **phone** and **socialLinks** only:
 
 ```json
-{
-  "socialLinks": 1,
-  "phone": 1
-}
+{}
 ```
 
 ---
@@ -63,7 +60,26 @@ All fields are optional. **Use `1` to include a field and `0` to exclude it**, b
   "success": true,
   "message": "request processed successfully",
   "data": {
-    "phone": "+923999999999",
+    "phone": "03999999990",
+    "userState": "offline",
+    "username": "adeelahmed",
+    "dateOfBirth": "2000-07-02T19:00:00Z",
+    "bio": "i am a software engineer and open for work related to software engineering.",
+    "location": {
+      "longitude": "<longitude>",
+      "latitude": "<latitude>"
+    },
+    "gender": "male",
+    "visibility": true,
+    "status": "busy now",
+    "avatar": {
+      "url": "https://res.cloudinary.com/adeelsorgnization/image/upload/v1769774604/suffa/user_6974c63b9de8b4da9b4b401b/profile/1769774645/fscyc3aziwc0u9blhznv.webp",
+      "publicId": "suffa/user_6974c63b9de8b4da9b4b401b/profile/1769774645/fscyc3aziwc0u9blhznv"
+    },
+    "coverImage": {
+      "url": "https://res.cloudinary.com/adeelsorgnization/image/upload/v1769775484/suffa/user_6974c63b9de8b4da9b4b401b/cover/1769775538/o9xgncdwm4madlwjegig.webp",
+      "publicId": "suffa/user_6974c63b9de8b4da9b4b401b/cover/1769775538/o9xgncdwm4madlwjegig"
+    },
     "socialLinks": [
       {
         "platform": "tiktok",
@@ -96,7 +112,28 @@ All fields are optional. **Use `1` to include a field and `0` to exclude it**, b
 {
   "success": true,
   "message": "request processed successfully",
-  "data": {},
+  "data": {
+    "phone": "03999999990",
+    "userState": "offline",
+    "username": "adeelahmed",
+    "dateOfBirth": "2000-07-02T19:00:00Z",
+    "bio": "i am a software engineer and open for work related to software engineering.",
+    "location": {
+      "longitude": "<longitude>",
+      "latitude": "<latitude>"
+    },
+    "gender": "male",
+    "visibility": true,
+    "status": "busy now",
+    "avatar": {
+      "url": "https://res.cloudinary.com/adeelsorgnization/image/upload/v1769774604/suffa/user_6974c63b9de8b4da9b4b401b/profile/1769774645/fscyc3aziwc0u9blhznv.webp",
+      "publicId": "suffa/user_6974c63b9de8b4da9b4b401b/profile/1769774645/fscyc3aziwc0u9blhznv"
+    },
+    "coverImage": {
+      "url": "https://res.cloudinary.com/adeelsorgnization/image/upload/v1769775484/suffa/user_6974c63b9de8b4da9b4b401b/cover/1769775538/o9xgncdwm4madlwjegig.webp",
+      "publicId": "suffa/user_6974c63b9de8b4da9b4b401b/cover/1769775538/o9xgncdwm4madlwjegig"
+    }
+  },
   "timestamp": "2026-02-02T07:47:43.471Z"
 }
 ```
