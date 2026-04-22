@@ -28,6 +28,8 @@ All fields are optional. **Use `1` to include a field and `0` to exclude it**, b
 | Parameter       | Type | Description                               |
 | --------------- | ---- | ----------------------------------------- |
 | `username`      | 0/1  | Include username in response.             |
+| `firstName`     | 0/1  | Include firstname in response.            |
+| `lastName`      | 0/1  | Include lastname in response.             |
 | `phone`         | 0/1  | Include phone number.                     |
 | `email`         | 0/1  | Include email address.                    |
 | `userState`     | 0/1  | Include online/offline status.            |

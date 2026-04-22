@@ -73,4 +73,3 @@ curl -X GET "{{baseUrl}}/user/availability-check/john_doe" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer {{token}}"
 ```
-

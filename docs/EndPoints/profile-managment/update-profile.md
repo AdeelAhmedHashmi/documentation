@@ -62,17 +62,16 @@ Authorization: Bearer {{token}}
 
 **Fields:**
 
-| Field       | Type      | Required | Description                                    |
-| ----------- | --------- | -------- | ---------------------------------------------- |
-| username    | string    | No       | Display name of the user                       |
-| firstName   | string    | No       | Display firstname of the user                  |
-| lastName    | string    | No       | Display lastname of the user                   |
-| location    | object    | No       | User's location                                |
-| gender      | string    | No       | User gender (`male`, `female`, `not specify`)  |
-| status      | string    | No       | Status message                                 |
-| dateOfBirth | string    | No       | Date of birth (ISO format or `DD MMM YYYY`)    |
-| bio         | string    | No       | Short bio of the user                          |
-| ...         | fieldType | No       | Other user related fields available for update |
+| Field       | Type   | Required | Description                                   |
+| ----------- | ------ | -------- | --------------------------------------------- |
+| username    | string | No       | Display name of the user                      |
+| firstName   | string | No       | Display firstname of the user                 |
+| lastName    | string | No       | Display lastname of the user                  |
+| location    | object | No       | User's location                               |
+| gender      | string | No       | User gender (`male`, `female`, `not specify`) |
+| status      | string | No       | Status message                                |
+| dateOfBirth | string | No       | Date of birth (ISO format or `DD MMM YYYY`)   |
+| bio         | string | No       | Short bio of the user                         |
 
 **Note**
 _For More Updateable Fields See UserSchema_
