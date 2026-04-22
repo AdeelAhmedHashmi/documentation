@@ -38,19 +38,15 @@ Authorization: Bearer {{token}}
 
 ## Response
 
-### Available username
-
 ```json
 {
-  "available": true
-}
-```
-
-### Taken username
-
-```json
-{
-  "available": false
+  "success": true,
+  "message": "request processed successfully",
+  "data": {
+    "isAvailable": false,
+    "isOwnedByCurrentUser": true
+  },
+  "timestamp": "2026-04-22T10:50:54.410Z"
 }
 ```
 
@@ -61,8 +57,7 @@ Authorization: Bearer {{token}}
 1. **Authorization**: Include a valid JWT in the `Authorization` header unless your app setup explicitly makes this route public.
 2. **Username normalization**: The backend trims spaces and converts the username to lowercase before checking.
 3. **No request body**: This route uses only the path parameter `:username`.
-4. **Boolean response**: `available: true` means the username can be used, and `available: false` means it already exists.
-5. **Use before submit**: This is useful for live username validation during signup or profile updates.
+4. **Use before submit**: This is useful for live username validation during signup or profile updates.
 
 ---
 
