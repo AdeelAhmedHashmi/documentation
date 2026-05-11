@@ -6,6 +6,7 @@ sidebar_position: 1
 
 # Welcome to the API Documentation
 
+
 This documentation is designed to give **frontend and backend developers** a clear, practical, and actionable guide to integrating with our **user management and device API system**. Here, you’ll find everything you need to **authenticate users, manage profiles, handle devices, and interact with educational and professional experiences**—all in one place.
 
 ---
