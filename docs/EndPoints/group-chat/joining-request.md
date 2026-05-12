@@ -97,6 +97,8 @@ Approve a pending join request. Only admins can approve.
 }
 ```
 
+note: `use userId in requestId field`
+
 **Example cURL Request**:
 
 ```bash
