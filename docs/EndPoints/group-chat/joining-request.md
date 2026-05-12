@@ -9,7 +9,7 @@ Create, accept, or reject join requests for a group.
 
 ---
 
-## POST /group/request
+## POST /group/request/:reqType
 
 Create or cancel a join request using an invitation code.
 
@@ -21,10 +21,14 @@ Create or cancel a join request using an invitation code.
 
 - `invitationCode` string (required)
 
+**Query Parameters**:
+
+- `reqType` add | remove (required)
+
 **Example cURL Request**:
 
 ```bash
-curl -X POST "{{baseUrl}}/group/request?invitationCode=K9J2VQ" \
+curl -X POST "{{baseUrl}}/group/add/request?invitationCode=K9J2VQ" \
   -H "Authorization: Bearer {{token}}"
 ```
 
@@ -41,10 +45,28 @@ curl -X POST "{{baseUrl}}/group/request?invitationCode=K9J2VQ" \
 }
 ```
 
+```bash
+curl -X POST "{{baseUrl}}/group/remove/request?invitationCode=K9J2VQ" \
+  -H "Authorization: Bearer {{token}}"
+```
+
+**Response 200 OK**:
+
+```json
+{
+  "success": true,
+  "message": "request processed successfully",
+  "data": {
+    "result": "request canceled!"
+  },
+  "timestamp": "2026-03-17T10:31:10.000Z"
+}
+```
+
 **Notes**:
 
 - If a request already exists, this endpoint cancels it and returns `request canceled!`.
-- If the user is already a member, the request fails.
+- If the user is already a member or requested, the conflict error occur in reponse.
 - If the user is blocked, the request fails.
 - Unknown query fields are rejected by the global validation pipe (`ValidationPipe` with `forbidNonWhitelisted`).
 - The global response interceptor wraps payloads as `success`, `message`, `data`, and `timestamp`.
@@ -53,7 +75,7 @@ curl -X POST "{{baseUrl}}/group/request?invitationCode=K9J2VQ" \
 
 - `400 Bad Request` — Missing/invalid `invitationCode` or group not found.
 - `401 Unauthorized` — Missing or malformed `Authorization` header, invalid/expired token, or suspended/inactive/untrusted device.
-- `409 Conflict` — User is blocked or already a member.
+- `409 Conflict` — User is blocked / already a member / request already existed / request not exist (in case of cancelling).
 - `500 Internal Server Error` — Any unexpected server-side failure.
 
 ---
