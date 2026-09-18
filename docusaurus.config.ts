@@ -22,11 +22,10 @@ const config: Config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "OsolDev", // Usually your GitHub org/user name.
+  organizationName: "", // Usually your GitHub org/user name.
   projectName: "suffa", // Usually your repo name.
 
   onBrokenLinks: "throw",
-
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
@@ -42,7 +41,9 @@ const config: Config = {
         docs: {
           sidebarPath: "./sidebars.ts",
         },
-        blog: false,
+        blog: {
+          showReadingTime: true,
+        },
         theme: {
           customCss: "./src/css/custom.css",
         },
@@ -57,12 +58,16 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: "Suffa Backend Apis",
+      title: "Suffa Apis",
       logo: {
         alt: "suffa logo",
         src: "img/logo.svg",
       },
       items: [
+        {
+          type: "docsVersionDropdown",
+          position: "right",
+        },
         {
           type: "docSidebar",
           sidebarId: "appSideBar",
@@ -72,6 +77,11 @@ const config: Config = {
         {
           to: "docs/apis",
           label: "APIs",
+          position: "left",
+        },
+        {
+          to: "blog",
+          label: "Blog",
           position: "left",
         },
         {
