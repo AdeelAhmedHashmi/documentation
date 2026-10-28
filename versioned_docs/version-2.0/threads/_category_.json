@@ -1,0 +1,8 @@
+{
+  "label": "Threads",
+  "position": 9,
+  "link": {
+    "type": "generated-index",
+    "description": "Endpoints for creating discussions, nested message trees, threaded conversations, and vote-ranked replies within groups."
+  }
+}

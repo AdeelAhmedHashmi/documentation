@@ -1,0 +1,8 @@
+{
+  "label": "System Events",
+  "position": 13,
+  "link": {
+    "type": "generated-index",
+    "description": "Endpoints for retrieving conversation-scoped system events, message receipts, delivery notices, and timeline audit logs for client synchronization."
+  }
+}

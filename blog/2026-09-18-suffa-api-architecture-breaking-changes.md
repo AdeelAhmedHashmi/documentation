@@ -24,6 +24,8 @@ authentication, real-time communication, and internal server components.
 > This release is not backward compatible with the previous API.
 > Clients using the previous API implementation will need to migrate.
 
+{/* truncate */}
+
 ## Why We Made These Changes
 
 Explain the problems with the previous architecture.

@@ -1,0 +1,9 @@
+{
+  "label": "Group Chat",
+  "position": 8,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "Endpoints managing group channels, membership join requests, member management, administrative roles, and invitation codes."
+  }
+}

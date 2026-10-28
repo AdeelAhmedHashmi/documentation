@@ -1,0 +1,8 @@
+{
+  "label": "Media Handling",
+  "position": 12,
+  "link": {
+    "type": "generated-index",
+    "description": "Endpoints for requesting secure client-side direct upload signatures and storage credentials for images, videos, audio, and documents."
+  }
+}

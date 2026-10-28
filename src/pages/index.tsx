@@ -10,12 +10,12 @@ const features = [
   {
     title: "Api Reference",
     description: "Comprehensive documentation of all backend API endpoints.",
-    link: "/docs/apis",
+    link: "/docs/intro/get-started",
   },
   {
     title: "Guide and Tutorials",
     description: "Guide for connecting, querying, and managing your database.",
-    link: "/docs/category/guide",
+    link: "/docs/1.0/category/guide",
   },
   {
     title: "Api Client",
@@ -43,7 +43,7 @@ function HomepageHeader() {
           <div className={styles.buttons}>
             <Link
               className="button button--primary button--lg"
-              to="/docs/overview"
+              to="/docs/intro/get-started"
             >
               Get Started
             </Link>

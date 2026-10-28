@@ -1,0 +1,8 @@
+{
+  "label": "Thread Messages & Replies",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Endpoints for posting root comments and nested replies, paginating discussions, and deleting messages inside a thread."
+  }
+}

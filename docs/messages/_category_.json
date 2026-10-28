@@ -1,0 +1,9 @@
+{
+  "label": "Messages",
+  "position": 7,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "Endpoints for sending direct and conversation messages, fetching timeline history, message info, message editing, deletion, and forwarding."
+  }
+}

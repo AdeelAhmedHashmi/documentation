@@ -1,0 +1,9 @@
+{
+  "label": "User Contacts",
+  "position": 5,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "Endpoints managing address book contact synchronization, matching phone contacts with registered Suffa users, and polling sync job results."
+  }
+}

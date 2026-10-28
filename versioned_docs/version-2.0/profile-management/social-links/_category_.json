@@ -1,0 +1,9 @@
+{
+  "label": "Social Links",
+  "position": 1,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "Endpoints for adding and removing social media profiles and custom web links."
+  }
+}

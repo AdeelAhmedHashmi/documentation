@@ -1,0 +1,9 @@
+{
+  "label": "Device Registration",
+  "position": 2,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "Endpoints managing physical device enrollment, magic link approval/rejection, and FCM push token updates."
+  }
+}

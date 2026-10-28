@@ -1,0 +1,9 @@
+{
+  "label": "Suffa HTTP API",
+  "position": 1,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "Comprehensive reference documentation for the Suffa Backend HTTP API."
+  }
+}

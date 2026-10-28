@@ -1,0 +1,9 @@
+{
+  "label": "Education",
+  "position": 3,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "Endpoints managing academic history, degrees, institutions, grades, and educational achievements."
+  }
+}

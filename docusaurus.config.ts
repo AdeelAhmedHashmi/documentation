@@ -75,7 +75,7 @@ const config: Config = {
           label: "Overview",
         },
         {
-          to: "docs/apis",
+          to: "docs/intro/get-started",
           label: "APIs",
           position: "left",
         },

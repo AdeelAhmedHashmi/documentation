@@ -1,0 +1,8 @@
+{
+  "label": "System & Health",
+  "position": 14,
+  "link": {
+    "type": "generated-index",
+    "description": "Endpoints for server health checks, ping liveness diagnostics, process memory metrics, and CPU usage telemetry."
+  }
+}

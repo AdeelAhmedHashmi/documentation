@@ -1,0 +1,9 @@
+{
+  "label": "Profile Management",
+  "position": 3,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "Endpoints for retrieving, updating, and enriching user profiles, avatars, cover images, social media links, work experiences, and academic education records."
+  }
+}

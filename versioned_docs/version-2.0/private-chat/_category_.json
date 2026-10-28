@@ -1,0 +1,9 @@
+{
+  "label": "Private Chat",
+  "position": 6,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "Endpoints for retrieving 1-on-1 private conversations, conversation metadata, unread counts, and participant information."
+  }
+}

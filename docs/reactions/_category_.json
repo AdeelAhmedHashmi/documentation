@@ -1,0 +1,8 @@
+{
+  "label": "Reactions",
+  "position": 10,
+  "link": {
+    "type": "generated-index",
+    "description": "Endpoints for toggling emoji reactions, viewing reaction counts and summaries, and querying reacting users across messages, posts, and feeds."
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "label": "Authentication",
+  "position": 2,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "Endpoints managing user identity, one-time passwords (OTP), token rotation, device enrollment, and trusted device authorization."
+  }
+}

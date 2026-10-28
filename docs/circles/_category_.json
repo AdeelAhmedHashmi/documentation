@@ -1,0 +1,8 @@
+{
+  "label": "Circles",
+  "position": 11,
+  "link": {
+    "type": "generated-index",
+    "description": "Endpoints for managing community circles, organizational hubs, circle settings, branding media, and automated announcement channels."
+  }
+}

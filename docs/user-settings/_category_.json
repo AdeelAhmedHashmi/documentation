@@ -1,0 +1,9 @@
+{
+  "label": "User Settings",
+  "position": 4,
+  "collapsed": false,
+  "link": {
+    "type": "generated-index",
+    "description": "Endpoints managing account privacy preferences, profile field visibilities, and user configurations."
+  }
+}
